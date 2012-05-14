@@ -1,2 +1,14 @@
 gp for mouse
 use schema-less to sql db
+#----------------------------------------------
+Transform:
+   #外部主要调用的模块
+   create_table!: TableCreator::create_table!
+   drop_table!(table_name): TableCreator::drop_table!
+
+TableCreator: 
+  create_table!:  创建表
+  drop_table!:  删除表
+
+Attributes:
+  Attributes数据格式:  字段 => Attribute对象(@klass,@name,@type,@default_value)
