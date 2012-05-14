@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 #require "transform"
 #使用Rails提供的一些方法 -> active_support
 #外部引用均为Transform调用方法
@@ -11,6 +12,7 @@ require "./transform/lib/transform/data_store"
 require "./transform/lib/transform/index"
 require "./transform/lib/transform/type/uuid"
 require 'rufus-json'
+require 'memcached'
 #require 'json'
 module Transform
 
@@ -198,15 +200,91 @@ module Transform
 
       #find搜索方式 => 搜索的字段必须有index
       def find options={  }
-        index_array = []
-        result_array = []
-        options.each do |k,v|
-          index_array = Transform.db.from("index_" + self.table_name +  "_on_" + k.to_s).filter('name=?',v).join(self.table_name,:id => :id)
-        end
-        #index_array.each do |r|
-        #  result_array << transolate_values(Transform.db.from(self.table_name).filter('id=?',r[:id]).first)
-        #end
-        index_array
+
+        #结果存放在memcache中
+        $cache = Memcached.new("localhost:11211")
+        $cache.set "results_pro_f",[]
+        $cache.set "results_pro_s",[]
+
+        #第一个搜索的进程
+        Process.fork{ 
+          index_array = []
+          result_array = []
+          options.each do |k,v|
+            #--------------- 时间测试 -------------------------------
+            p "--- 开始搜索 ---"
+            query_start_time = Time.now()
+            #----------------------------------------------
+
+            databaseset = Transform.db.from("index_" + self.table_name +  "_on_" + k.to_s)
+
+
+            all_count = databaseset.count/2
+            index_array = databaseset.limit(all_count).filter('name=?',v).join(self.table_name,:id => :id)
+
+            #----------------------------------------------
+            p "--- 搜索结束(所花的时间为: #{ Time.now() - query_start_time }s) ---"
+            p "--- 开始整理数据 ---"
+            #----------------------------------------------
+            result_start_time = Time.now()
+
+            index_array.each do |r|
+              result_array << transolate_values(Transform.db.from(self.table_name).filter('id=?',r[:id]).first)
+            end
+            #----------------------------------------------
+            p "---  最终结果整理结束(所花的时间为:#{ Time.now() - result_start_time }s) ---"
+            #----------------------------------------------
+
+          end
+          $cache.set "results_pro_f", result_array
+        }
+
+        #第二个搜索进程
+        Process.fork{ 
+          index_array = []
+          result_array = []
+          options.each do |k,v|
+            #--------------- 时间测试 -------------------------------
+            p "--- 开始搜索 ---"
+            query_start_time = Time.now()
+            #----------------------------------------------
+
+            databaseset = Transform.db.from("index_" + self.table_name +  "_on_" + k.to_s)
+
+
+            all_count = databaseset.count
+            index_array = databaseset.limit(all_count/2,all_count - all_count/2).filter('name=?',v).join(self.table_name,:id => :id)
+
+            #----------------------------------------------
+            p "--- 搜索结束(所花的时间为: #{ Time.now() - query_start_time }s) ---"
+            p "--- 开始整理数据 ---"
+            #----------------------------------------------
+            result_start_time = Time.now()
+
+            index_array.each do |r|
+              result_array << transolate_values(Transform.db.from(self.table_name).filter('id=?',r[:id]).first)
+            end
+            #----------------------------------------------
+            p "---  最终结果整理结束(所花的时间为:#{ Time.now() - result_start_time }s) ---"
+            #----------------------------------------------
+
+          end
+          $cache.set "results_pro_s", result_array
+        }
+
+        Process.waitall
+        $cache.get("results_pro_f") +  $cache.get("results_pro_s")
+        #$cache.get "results_pro_f"
+        #index_array
+       # index_array = []
+       # result_array = []
+       # options.each do |k,v|
+       #   index_array = Transform.db.from("index_" + self.table_name +  "_on_" + k.to_s).filter('name=?',v).join(self.table_name,:id => :id)
+       # end
+       # #index_array.each do |r|
+       # #  result_array << transolate_values(Transform.db.from(self.table_name).filter('id=?',r[:id]).first)
+       # #end
+       # index_array
       end
       #----------------------------------------------
 
