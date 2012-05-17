@@ -37,13 +37,13 @@ Transform.configure :adapter  => "mysql",
 #                   :password => "000",  
 #                   :database => "gp_development"  
 #
-
+#include Friendly::Document
+#indexes :number
 class  User 
-  #include Friendly::Document
   include Transform::Document
   attribute :name, String #, { :default => "mouse" }
   indexes :name
-  #indexes :number
+  
 
   #类方法
   class << self
