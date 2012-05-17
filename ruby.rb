@@ -16,9 +16,9 @@
 #)
 #----------------------------------------------
 # friendly
+#require "friendly"
 
 require "rubygems"
-#require "friendly"
 #require "json"
 #require 'rufus-json'
 require "factory_girl"
