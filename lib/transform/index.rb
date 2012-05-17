@@ -1,3 +1,8 @@
+# index table
+#---------------------------------
+# primary_key :id
+# string :name
+
 module Transform
   class Index
     attr_accessor :name, :klass, :table_name
