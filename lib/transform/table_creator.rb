@@ -21,7 +21,7 @@ module Transform
             db.create_table d.table_name do
               primary_key :added_id
               binary      :id,         :size => 16
-              String      :contents, :text => true
+              String      :contents, :text => true  #默认6W多个字符长度
               Time        :created_at
               Time        :updated_at
             end
