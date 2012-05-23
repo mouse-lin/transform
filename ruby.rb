@@ -1,15 +1,17 @@
 # -*- encoding : utf-8 -*-
 require "rubygems"
+#require "friendly"
 #require "json"
 #require 'rufus-json'
 require "factory_girl"
 require 'memcached'
+
 require "./transform/lib/transform"
 Transform.configure :adapter  => "mysql",  
                    :host     => "localhost",  
                    :user     => "root",  
                    :password => "000",  
-                   :database => "gp_development"  
+                   :database => "gp_development",
                    :process_num => 2
 class  User 
   include Transform::Document
@@ -21,7 +23,7 @@ class  User
   attribute :age, Integer
   
   indexes :name
-  
+  #indexes :number
 
   #类方法
   class << self
