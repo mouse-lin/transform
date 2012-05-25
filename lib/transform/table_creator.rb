@@ -25,9 +25,9 @@ module Transform
               Time        :created_at
               Time        :updated_at
             end
-            p "created #{ d.table_name } success!"
+            puts "\033[22;31m ****** created #{ d.table_name } success! ******\033[0m"
           else
-            p "created error: #{ d.table_name } exists!"
+            puts "\033[22;32m ****** #{ d.table_name } exists! ****** \033[0m"
           end
         end
       end
@@ -55,9 +55,9 @@ module Transform
                 binary      :id,         :size => 16
                 String :name
               end
-              p "created #{ index_table_name  } success!"
+              puts "\033[22;31mcreated ****** #{ index_table_name  } success! ******\033[0m"
             else
-              p "#{ index_table_name} exists!"
+              puts "\033[22;32m ****** #{ index_table_name} exists! ******\033[0m"
             end
           end
         end

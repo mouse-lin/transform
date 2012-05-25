@@ -80,7 +80,7 @@ module Transform
           result_array = []
           options.each do |k,v|
             #--------------- 时间测试 -------------------------------
-            p "--- #{ p+1 } Pro开始搜索 ---"
+            puts "\033[1;32m--- #{ p+1 } Pro开始搜索 ---\033[0m"
             query_start_time = Time.now()
             #----------------------------------------------
             databaseset = Transform.db.from("index_" + self.table_name +  "_on_" + k.to_s)
@@ -97,7 +97,7 @@ module Transform
               index_array = databaseset.limit(search_quantity).filter('name=?',v).join(self.table_name,:id => :id)
             end
             #----------------------------------------------
-            p "--- #{ p+1 } Pro 搜索结束(所花的时间为: #{ Time.now() - query_start_time }s) ---"
+            puts "\033[1;32m #{ p+1 } Pro 搜索结束,所花的时间为: \033[1;31m#{ Time.now() - query_start_time }s\033[0m "
             #p "--- 开始整理数据 ---"
             #----------------------------------------------
             result_start_time = Time.now()
@@ -164,6 +164,9 @@ module Transform
         d.delete(:added_id)
         d.delete(:contents)
         content_hash.merge! d
+        # 测试使用代码
+        puts " \033[1;35m******  search  result : ******\033[0m\n \033[22;32m#{ content_hash }\033[0m"
+        # 测试使用代码
       end
       return content_hash 
     end

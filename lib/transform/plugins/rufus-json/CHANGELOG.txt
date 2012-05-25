@@ -1,0 +1,27 @@
+
+= rufus-json CHANGELOG.txt
+
+
+== rufus-json - 0.2.3    released 2010/06/29
+
+- made sure we're able to parse any JSON string
+  ('json' couldn't parse "true", '"string"' or "12345" on their own)
+
+
+== rufus-json - 0.2.2    released 2010/05/26
+
+- Unified Rufus::Json::ParserError (Torsten Schoenebaum)
+
+
+== rufus-json - 0.2.1    released 2010/05/03
+
+- ActiveSupport::JSON.encode(o) instead of o.to_json
+
+
+== rufus-json - 0.2.0    released 2010/02/08
+
+- JSON :max_nesting set to nil (no limits)
+
+
+== rufus-json - 0.1.0    released 2009/12/25
+

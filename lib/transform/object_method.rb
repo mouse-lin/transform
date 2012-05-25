@@ -15,6 +15,7 @@ module Transform
         :updated_at => Time.now(),
         :contents => contents
      }
+     puts "\033[22;32m #{ data_hash } \033[0m"
      TableCreator.db[self.class.table_name.to_sym].insert(data_hash)
    end
  

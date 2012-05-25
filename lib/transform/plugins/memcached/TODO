@@ -1,0 +1,4 @@
+
+* Promote touch support to toplevel and add ASCII protocol touching
+* Remove SWIG and modify libmemcached to accept and return Ruby objects directly
+* Verify that DNS lookups are getting cached
