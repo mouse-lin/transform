@@ -114,8 +114,8 @@ while true do
     # 删除索引DB.run("drop index index_items_on_name on items)"; 查看索引 show index from items
     puts "\033[1;32m ****** 开始模拟DDL阻塞 60000多条记录 (关系型模式) ****** \033[0m "
     start_time = Time.now()
-    #DB.run(" alter table items add index index_items_on_name (name) ; ")
-    DB.run("drop index index_items_on_name on items")
+    DB.run(" alter table items add index index_items_on_name (name) ; ")
+    #DB.run("drop index index_items_on_name on items")
     #----------------------------------------------
     User.generate_test_datas 1 
     puts "\033[1;32m  ****** 模拟DDL阻塞插入1条数据结束, 所花费时间为：\033[1;31m#{ Time.now() - start_time }s\033[0m "
